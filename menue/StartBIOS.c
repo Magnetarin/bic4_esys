@@ -87,14 +87,15 @@ void InitBoard(){
 	SSIConfigSetExpClk(SSI3_BASE, 120000000, SSI_FRF_MOTO_MODE_0, SSI_MODE_MASTER, 1000000, 8);
 	SSIEnable(SSI3_BASE);
 
+/*
     SysCtlPeripheralEnable(GPIO_PORTJ_BASE);
     GPIOPinTypeGPIOInput(GPIO_PORTJ_BASE, GPIO_PIN_0);
     GPIOPadConfigSet(GPIO_PORTJ_BASE,GPIO_PIN_0,GPIO_STRENGTH_2MA,GPIO_PIN_TYPE_STD_WPU);
-    GPIOIntTypeSet(GPIO_PORTJ_BASE,GPIO_PIN_0,GPIO_FALLING_EDGE);
+    GPIOIntTypeSet(GPIO_PORTJ_BASE,GPIO_PIN_0,GPIO_FALLING_EDGE);*/
 
-    GPIOIntRegister(GPIO_PORTJ_BASE,PortJIntHandler);
+    //GPIOIntRegister(GPIO_PORTJ_BASE,PortJIntHandler);
 
-    GPIOIntEnable(GPIO_PORTJ_BASE, GPIO_INT_PIN_0);
+    //GPIOIntEnable(GPIO_PORTJ_BASE, GPIO_INT_PIN_0);
 }
 
 
@@ -321,25 +322,24 @@ void writeNumbers(int number,int X1,int X2,int Y1,int Y2,char forground1,char fo
 	}
 }
 
-void helligkeitsNavigating(int value){
-	unsigned j;
-	int zehnerStelle = value/10;
-	if(value==100){
-		writeNumbers(1,0x1F,0x24,0x36,0x3d,0x00,0x00);
-		writeNumbers(0,0x27,0x2e,0x36,0x3d,0x00,0x00);
-		writeNumbers(0,0x30,0x37,0x36,0x3d,0x00,0x00);
-	}else if(zehnerStelle > 0){
-		writeNumbers(zehnerStelle,0x27,0x2e,0x36,0x3d,0x00,0x00);
-		writeNumbers(value-zehnerStelle,0x30,0x37,0x36,0x3d,0x00,0x00);
-	}else{
-		writeNumbers(value,0x30,0x37,0x36,0x3d,0x00,0x00);
-	}
-	writeLetter(proLine1,proLine2,proLine3,proLine4,proLine5,proLine6,proLine7,proLine8,0x39,0x40,0x36,0x3d,0x00,0x00);
+void printStatistik(){
+	writeLetter(sLine1,sLine2,sLine3,sLine4,sLine5,sLine6,sLine7,sLine8,0x09,0x10,0x51,0x58,0x00,0x00);
+	writeLetter(tLine1,tLine2,tLine3,tLine4,tLine5,tLine6,tLine7,tLine8,0x12,0x19,0x51,0x58,0x00,0x00);
+	writeLetter(aLine1,aLine2,aLine3,aLine4,aLine5,aLine6,aLine7,aLine8,0x1B,0x22,0x51,0x58,0x00,0x00);
+	writeLetter(tLine1,tLine2,tLine3,tLine4,tLine5,tLine6,tLine7,tLine8,0x24,0x2B,0x51,0x58,0x00,0x00);
+	writeLetter(iLine1,iLine2,iLine3,iLine4,iLine5,iLine6,iLine7,iLine8,0x2D,0x34,0x51,0x58,0x00,0x00);
+	writeLetter(sLine1,sLine2,sLine3,sLine4,sLine5,sLine6,sLine7,sLine8,0x36,0x3D,0x51,0x58,0x00,0x00);
+	writeLetter(tLine1,tLine2,tLine3,tLine4,tLine5,tLine6,tLine7,tLine8,0x3F,0x46,0x51,0x58,0x00,0x00);
+	writeLetter(iLine1,iLine2,iLine3,iLine4,iLine5,iLine6,iLine7,iLine8,0x48,0x4F,0x51,0x58,0x00,0x00);
+	writeLetter(kLine1,kLine2,kLine3,kLine4,kLine5,kLine6,kLine7,kLine8,0x51,0x58,0x51,0x58,0x00,0x00);
+
+	//print Punkte
+	//ask for values
 }
 
-void mainMenuNavigating(int menuePoint){
+void modusNavigation(int modusMenuePoint){
 	unsigned j;
-	switch(menuePoint){
+	switch(modusMenuePoint){
 		case 0:
 			OLED_C_MemorySize(0x02,0x05,0x44,0x48);
 			DDRAM_access();
@@ -347,6 +347,33 @@ void mainMenuNavigating(int menuePoint){
 		        	  OLED_C_Color(0x00,0x00);
 			}
 			OLED_C_MemorySize(0x02,0x05,0x37,0x3B);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x2A,0x2E);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x1E,0x22);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x12,0x16);
 			DDRAM_access();
 			for(j=0;j<20;j++){
 		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
@@ -380,8 +407,332 @@ void mainMenuNavigating(int menuePoint){
 		        	  OLED_C_Color(0xFF,0xFF);
 		    	  }
 			}
+			OLED_C_MemorySize(0x02,0x05,0x1E,0x22);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x12,0x16);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
 			break;
 		case 2:
+			OLED_C_MemorySize(0x02,0x05,0x44,0x48);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x37,0x3B);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x2A,0x2E);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  OLED_C_Color(0x00,0x00);
+			}
+			OLED_C_MemorySize(0x02,0x05,0x1E,0x22);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x12,0x16);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			break;
+		case 3:
+			OLED_C_MemorySize(0x02,0x05,0x44,0x48);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x37,0x3B);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x2A,0x2E);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x1E,0x22);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+				OLED_C_Color(0x00,0x00);
+			}
+			OLED_C_MemorySize(0x02,0x05,0x12,0x16);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			break;
+		case 4:
+			OLED_C_MemorySize(0x02,0x05,0x44,0x48);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x37,0x3B);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x2A,0x2E);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x1E,0x22);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x12,0x16);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  OLED_C_Color(0x00,0x00);
+			}
+			break;
+	}
+}
+
+void printModus(){
+	writeLetter(mLine1,mLine2,mLine3,mLine4,mLine5,mLine6,mLine7,mLine8,0x1B,0x22,0x51,0x58,0x00,0x00);
+	writeLetter(oLine1,oLine2,oLine3,oLine4,oLine5,oLine6,oLine7,oLine8,0x24,0x2B,0x51,0x58,0x00,0x00);
+	writeLetter(dLine1,dLine2,dLine3,dLine4,dLine5,dLine6,dLine7,dLine8,0x2D,0x34,0x51,0x58,0x00,0x00);
+	writeLetter(uLine1,uLine2,uLine3,uLine4,uLine5,uLine6,uLine7,uLine8,0x36,0x3D,0x51,0x58,0x00,0x00);
+	writeLetter(sLine1,sLine2,sLine3,sLine4,sLine5,sLine6,sLine7,sLine8,0x3F,0x46,0x51,0x58,0x00,0x00);
+
+	/*
+	writeLetter(bLine1,bLine2,bLine3,bLine4,bLine5,bLine6,bLine7,bLine8,0x07,0x0E,0x43,0x4A,0x00,0x00);
+	writeLetter(uLine1,uLine2,uLine3,uLine4,uLine5,uLine6,uLine7,uLine8,0x10,0x17,0x43,0x4A,0x00,0x00);
+	writeLetter(nLine1,nLine2,nLine3,nLine4,nLine5,nLine6,nLine7,nLine8,0x19,0x20,0x43,0x4A,0x00,0x00);
+	writeLetter(tLine1,tLine2,tLine3,tLine4,tLine5,tLine6,tLine7,tLine8,0x22,0x29,0x43,0x4A,0x00,0x00);*/
+
+	//standby, moodlamp, colorswirl, lightflow, no Modus
+	int x1=0x07;
+	int x2=0x0E;
+	writeLetter(sLine1,sLine2,sLine3,sLine4,sLine5,sLine6,sLine7,sLine8,x1,x2,0x43,0x4A,0x00,0x00);
+	writeLetter(tLine1,tLine2,tLine3,tLine4,tLine5,tLine6,tLine7,tLine8,(x1+=9),(x2+=9),0x43,0x4A,0x00,0x00);
+	writeLetter(aLine1,aLine2,aLine3,aLine4,aLine5,aLine6,aLine7,aLine8,(x1+=9),(x2+=9),0x43,0x4A,0x00,0x00);
+	writeLetter(nLine1,nLine2,nLine3,nLine4,nLine5,nLine6,nLine7,nLine8,(x1+=9),(x2+=9),0x43,0x4A,0x00,0x00);
+	writeLetter(dLine1,dLine2,dLine3,dLine4,dLine5,dLine6,dLine7,dLine8,(x1+=9),(x2+=9),0x43,0x4A,0x00,0x00);
+	writeLetter(bLine1,bLine2,bLine3,bLine4,bLine5,bLine6,bLine7,bLine8,(x1+=9),(x2+=9),0x43,0x4A,0x00,0x00);
+	writeLetter(yLine1,yLine2,yLine3,yLine4,yLine5,yLine6,yLine7,yLine8,(x1+=9),(x2+=9),0x43,0x4A,0x00,0x00);
+
+
+	x1=0x07;
+	x2=0x0E;
+	writeLetter(mLine1,mLine2,mLine3,mLine4,mLine5,mLine6,mLine7,mLine8,x1,x2,0x36,0x3d,0x00,0x00);
+	writeLetter(oLine1,oLine2,oLine3,oLine4,oLine5,oLine6,oLine7,oLine8,(x1+=9),(x2+=9),0x36,0x3d,0x00,0x00);
+	writeLetter(oLine1,oLine2,oLine3,oLine4,oLine5,oLine6,oLine7,oLine8,(x1+=9),(x2+=9),0x36,0x3d,0x00,0x00);
+	writeLetter(dLine1,dLine2,dLine3,dLine4,dLine5,dLine6,dLine7,dLine8,(x1+=9),(x2+=9),0x36,0x3d,0x00,0x00);
+	writeLetter(lLine1,lLine2,lLine3,lLine4,lLine5,lLine6,lLine7,lLine8,(x1+=9),(x2+=9),0x36,0x3d,0x00,0x00);
+	writeLetter(aLine1,aLine2,aLine3,aLine4,aLine5,aLine6,aLine7,aLine8,(x1+=9),(x2+=9),0x36,0x3d,0x00,0x00);
+	writeLetter(mLine1,mLine2,mLine3,mLine4,mLine5,mLine6,mLine7,mLine8,(x1+=9),(x2+=9),0x36,0x3d,0x00,0x00);
+	writeLetter(pLine1,pLine2,pLine3,pLine4,pLine5,pLine6,pLine7,pLine8,(x1+=9),(x2+=9),0x36,0x3d,0x00,0x00);
+
+
+	x1=0x07;
+	x2=0x0E;
+	writeLetter(cLine1,cLine2,cLine3,cLine4,cLine5,cLine6,cLine7,cLine8,x1,x2,0x29,0x30,0x00,0x00);
+	writeLetter(oLine1,oLine2,oLine3,oLine4,oLine5,oLine6,oLine7,oLine8,(x1+=9),(x2+=9),0x29,0x30,0x00,0x00);
+	writeLetter(lLine1,lLine2,lLine3,lLine4,lLine5,lLine6,lLine7,lLine8,(x1+=9),(x2+=9),0x29,0x30,0x00,0x00);
+	writeLetter(oLine1,oLine2,oLine3,oLine4,oLine5,oLine6,oLine7,oLine8,(x1+=9),(x2+=9),0x29,0x30,0x00,0x00);
+	writeLetter(rLine1,rLine2,rLine3,rLine4,rLine5,rLine6,rLine7,rLine8,(x1+=9),(x2+=9),0x29,0x30,0x00,0x00);
+	writeLetter(sLine1,sLine2,sLine3,sLine4,sLine5,sLine6,sLine7,sLine8,(x1+=9),(x2+=9),0x29,0x30,0x00,0x00);
+	writeLetter(wLine1,wLine2,wLine3,wLine4,wLine5,wLine6,wLine7,wLine8,(x1+=9),(x2+=9),0x29,0x30,0x00,0x00);
+	writeLetter(iLine1,iLine2,iLine3,iLine4,iLine5,iLine6,iLine7,iLine8,(x1+=9),(x2+=9),0x29,0x30,0x00,0x00);
+	writeLetter(rLine1,rLine2,rLine3,rLine4,rLine5,rLine6,rLine7,rLine8,(x1+=9),(x2+=9),0x29,0x30,0x00,0x00);
+	writeLetter(lLine1,lLine2,lLine3,lLine4,lLine5,lLine6,lLine7,lLine8,(x1+=9),(x2+=9),0x29,0x30,0x00,0x00);
+
+
+	x1=0x07;
+	x2=0x0E;
+	writeLetter(lLine1,lLine2,lLine3,lLine4,lLine5,lLine6,lLine7,lLine8,x1,x2,0x1D,0x24,0x00,0x00);
+	writeLetter(iLine1,iLine2,iLine3,iLine4,iLine5,iLine6,iLine7,iLine8,(x1+=9),(x2+=9),0x1D,0x24,0x00,0x00);
+	writeLetter(gLine1,gLine2,gLine3,gLine4,gLine5,gLine6,gLine7,gLine8,(x1+=9),(x2+=9),0x1D,0x24,0x00,0x00);
+	writeLetter(hLine1,hLine2,hLine3,hLine4,hLine5,hLine6,hLine7,hLine8,(x1+=9),(x2+=9),0x1D,0x24,0x00,0x00);
+	writeLetter(tLine1,tLine2,tLine3,tLine4,tLine5,tLine6,tLine7,tLine8,(x1+=9),(x2+=9),0x1D,0x24,0x00,0x00);
+	writeLetter(fLine1,fLine2,fLine3,fLine4,fLine5,fLine6,fLine7,fLine8,(x1+=9),(x2+=9),0x1D,0x24,0x00,0x00);
+	writeLetter(lLine1,lLine2,lLine3,lLine4,lLine5,lLine6,lLine7,lLine8,(x1+=9),(x2+=9),0x1D,0x24,0x00,0x00);
+	writeLetter(oLine1,oLine2,oLine3,oLine4,oLine5,oLine6,oLine7,oLine8,(x1+=9),(x2+=9),0x1D,0x24,0x00,0x00);
+	writeLetter(wLine1,wLine2,wLine3,wLine4,wLine5,wLine6,wLine7,wLine8,(x1+=9),(x2+=9),0x1D,0x24,0x00,0x00);
+
+
+	x1=0x07;
+	x2=0x0E;
+	writeLetter(nLine1,nLine2,nLine3,nLine4,nLine5,nLine6,nLine7,nLine8,x1,x2,0x11,0x18,0x00,0x00);
+	writeLetter(oLine1,oLine2,oLine3,oLine4,oLine5,oLine6,oLine7,oLine8,(x1+=9),(x2+=9),0x11,0x18,0x00,0x00);
+	writeLetter(mLine1,mLine2,mLine3,mLine4,mLine5,mLine6,mLine7,mLine8,(x1+=18),(x2+=18),0x11,0x18,0x00,0x00);
+	writeLetter(oLine1,oLine2,oLine3,oLine4,oLine5,oLine6,oLine7,oLine8,(x1+=9),(x2+=9),0x11,0x18,0x00,0x00);
+	writeLetter(dLine1,dLine2,dLine3,dLine4,dLine5,dLine6,dLine7,dLine8,(x1+=9),(x2+=9),0x11,0x18,0x00,0x00);
+	writeLetter(uLine1,uLine2,uLine3,uLine4,uLine5,uLine6,uLine7,uLine8,(x1+=9),(x2+=9),0x11,0x18,0x00,0x00);
+	writeLetter(sLine1,sLine2,sLine3,sLine4,sLine5,sLine6,sLine7,sLine8,(x1+=9),(x2+=9),0x11,0x18,0x00,0x00);
+}
+
+void helligkeitsNavigating(int value){
+	unsigned j;
+	int zehnerStelle = value/10;
+	if(value==100){
+		writeNumbers(1,0x1E,0x25,0x36,0x3d,0x00,0x00);
+		writeNumbers(0,0x27,0x2e,0x36,0x3d,0x00,0x00);
+		writeNumbers(0,0x30,0x37,0x36,0x3d,0x00,0x00);
+	}else if(zehnerStelle > 0){
+		writeLetter(emtLine1,emtLine2,emtLine3,emtLine4,emtLine5,emtLine6,emtLine7,emtLine8,0x1E,0x25,0x36,0x3d,0xFF,0xFF);
+		writeNumbers(zehnerStelle,0x27,0x2e,0x36,0x3d,0x00,0x00);
+		writeNumbers(value-(zehnerStelle*10),0x30,0x37,0x36,0x3d,0x00,0x00);
+	}else{
+		writeLetter(emtLine1,emtLine2,emtLine3,emtLine4,emtLine5,emtLine6,emtLine7,emtLine8,0x1E,0x25,0x36,0x3d,0xFF,0xFF);
+		writeLetter(emtLine1,emtLine2,emtLine3,emtLine4,emtLine5,emtLine6,emtLine7,emtLine8,0x27,0x2e,0x36,0x3d,0xFF,0xFF);
+		writeNumbers(value,0x30,0x37,0x36,0x3d,0x00,0x00);
+	}
+	writeLetter(proLine1,proLine2,proLine3,proLine4,proLine5,proLine6,proLine7,proLine8,0x39,0x40,0x36,0x3d,0x00,0x00);
+}
+
+void mainMenuNavigating(int menuePoint){
+	unsigned j;
+	switch(menuePoint){
+		case 0:
+			OLED_C_MemorySize(0x02,0x05,0x44,0x48);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		        	  OLED_C_Color(0x00,0x00);
+			}
+			OLED_C_MemorySize(0x02,0x05,0x37,0x3B);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x2A,0x2E);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x1E,0x22);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			break;
+		case 1:
+			OLED_C_MemorySize(0x02,0x05,0x44,0x48);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x37,0x3B);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		        	  OLED_C_Color(0x00,0x00);
+			}
+			OLED_C_MemorySize(0x02,0x05,0x2A,0x2E);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x1E,0x22);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			break;
+		case 2:
+			OLED_C_MemorySize(0x02,0x05,0x44,0x48);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
 			OLED_C_MemorySize(0x02,0x05,0x37,0x3B);
 			DDRAM_access();
 			for(j=0;j<20;j++){
@@ -407,6 +758,24 @@ void mainMenuNavigating(int menuePoint){
 			}
 			break;
 		case 3:
+			OLED_C_MemorySize(0x02,0x05,0x44,0x48);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
+			OLED_C_MemorySize(0x02,0x05,0x37,0x3B);
+			DDRAM_access();
+			for(j=0;j<20;j++){
+		    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
+		        	  OLED_C_Color(0x00,0x00);
+		    	  }else{
+		        	  OLED_C_Color(0xFF,0xFF);
+		    	  }
+			}
 			OLED_C_MemorySize(0x02,0x05,0x2A,0x2E);
 			DDRAM_access();
 			for(j=0;j<20;j++){
@@ -425,6 +794,46 @@ void mainMenuNavigating(int menuePoint){
 	}
 }
 
+void paintMenue(){
+	writeLetter(mLine1,mLine2,mLine3,mLine4,mLine5,mLine6,mLine7,mLine8,0x1E,0x25,0x51,0x58,0x00,0x00);
+	writeLetter(eLine1,eLine2,eLine3,eLine4,eLine5,eLine6,eLine7,eLine8,0x28,0x2F,0x51,0x58,0x00,0x00);
+	writeLetter(nLine1,nLine2,nLine3,nLine4,nLine5,nLine6,nLine7,nLine8,0x32,0x39,0x51,0x58,0x00,0x00);
+	writeLetter(uLine1,uLine2,uLine3,uLine4,uLine5,uLine6,uLine7,uLine8,0x3C,0x43,0x51,0x58,0x00,0x00);
+
+	writeLetter(fLine1,fLine2,fLine3,fLine4,fLine5,fLine6,fLine7,fLine8,0x07,0x0E,0x43,0x4A,0x00,0x00);
+	writeLetter(aLine1,aLine2,aLine3,aLine4,aLine5,aLine6,aLine7,aLine8,0x10,0x17,0x43,0x4A,0x00,0x00);
+	writeLetter(rLine1,rLine2,rLine3,rLine4,rLine5,rLine6,rLine7,rLine8,0x19,0x20,0x43,0x4A,0x00,0x00);
+	writeLetter(bLine1,bLine2,bLine3,bLine4,bLine5,bLine6,bLine7,bLine8,0x22,0x29,0x43,0x4A,0x00,0x00);
+	writeLetter(eLine1,eLine2,eLine3,eLine4,eLine5,eLine6,eLine7,eLine8,0x2B,0x32,0x43,0x4A,0x00,0x00);
+
+	writeLetter(hLine1,hLine2,hLine3,hLine4,hLine5,hLine6,hLine7,hLine8,0x07,0x0E,0x36,0x3D,0x00,0x00);
+	writeLetter(eLine1,eLine2,eLine3,eLine4,eLine5,eLine6,eLine7,eLine8,0x10,0x17,0x36,0x3D,0x00,0x00);
+	writeLetter(lLine1,lLine2,lLine3,lLine4,lLine5,lLine6,lLine7,lLine8,0x19,0x20,0x36,0x3D,0x00,0x00);
+	writeLetter(lLine1,lLine2,lLine3,lLine4,lLine5,lLine6,lLine7,lLine8,0x22,0x29,0x36,0x3D,0x00,0x00);
+	writeLetter(iLine1,iLine2,iLine3,iLine4,iLine5,iLine6,iLine7,iLine8,0x2B,0x32,0x36,0x3D,0x00,0x00);
+	writeLetter(gLine1,gLine2,gLine3,gLine4,gLine5,gLine6,gLine7,gLine8,0x34,0x3B,0x36,0x3D,0x00,0x00);
+	writeLetter(kLine1,kLine2,kLine3,kLine4,kLine5,kLine6,kLine7,kLine8,0x3D,0x44,0x36,0x3D,0x00,0x00);
+	writeLetter(eLine1,eLine2,eLine3,eLine4,eLine5,eLine6,eLine7,eLine8,0x46,0x4D,0x36,0x3D,0x00,0x00);
+	writeLetter(iLine1,iLine2,iLine3,iLine4,iLine5,iLine6,iLine7,iLine8,0x4F,0x56,0x36,0x3D,0x00,0x00);
+	writeLetter(tLine1,tLine2,tLine3,tLine4,tLine5,tLine6,tLine7,tLine8,0x58,0x5F,0x36,0x3D,0x00,0x00);
+
+	writeLetter(mLine1,mLine2,mLine3,mLine4,mLine5,mLine6,mLine7,mLine8,0x07,0x0E,0x29,0x30,0x00,0x00);
+	writeLetter(oLine1,oLine2,oLine3,oLine4,oLine5,oLine6,oLine7,oLine8,0x10,0x17,0x29,0x30,0x00,0x00);
+	writeLetter(dLine1,dLine2,dLine3,dLine4,dLine5,dLine6,dLine7,dLine8,0x19,0x20,0x29,0x30,0x00,0x00);
+	writeLetter(uLine1,uLine2,uLine3,uLine4,uLine5,uLine6,uLine7,uLine8,0x22,0x29,0x29,0x30,0x00,0x00);
+	writeLetter(sLine1,sLine2,sLine3,sLine4,sLine5,sLine6,sLine7,sLine8,0x2B,0x32,0x29,0x30,0x00,0x00);
+
+	writeLetter(sLine1,sLine2,sLine3,sLine4,sLine5,sLine6,sLine7,sLine8,0x07,0x0E,0x1D,0x24,0x00,0x00);
+	writeLetter(tLine1,tLine2,tLine3,tLine4,tLine5,tLine6,tLine7,tLine8,0x10,0x17,0x1D,0x24,0x00,0x00);
+	writeLetter(aLine1,aLine2,aLine3,aLine4,aLine5,aLine6,aLine7,aLine8,0x19,0x20,0x1D,0x24,0x00,0x00);
+	writeLetter(tLine1,tLine2,tLine3,tLine4,tLine5,tLine6,tLine7,tLine8,0x22,0x29,0x1D,0x24,0x00,0x00);
+	writeLetter(iLine1,iLine2,iLine3,iLine4,iLine5,iLine6,iLine7,iLine8,0x2B,0x32,0x1D,0x24,0x00,0x00);
+	writeLetter(sLine1,sLine2,sLine3,sLine4,sLine5,sLine6,sLine7,sLine8,0x34,0x3B,0x1D,0x24,0x00,0x00);
+	writeLetter(tLine1,tLine2,tLine3,tLine4,tLine5,tLine6,tLine7,tLine8,0x3D,0x44,0x1D,0x24,0x00,0x00);
+	writeLetter(iLine1,iLine2,iLine3,iLine4,iLine5,iLine6,iLine7,iLine8,0x46,0x4D,0x1D,0x24,0x00,0x00);
+	writeLetter(kLine1,kLine2,kLine3,kLine4,kLine5,kLine6,kLine7,kLine8,0x4F,0x56,0x1D,0x24,0x00,0x00);
+}
+
 
 void snakeFxn(){
 	unsigned j;
@@ -437,6 +846,9 @@ void snakeFxn(){
 	int menuePoint = 0;
 	int menuTyp = 0;
 	int helligkeitsValue = 100;
+	int modusMenuePoint = 0;
+	int isFarbwahl=0;
+	int first=1;
 	/*
 	 * 0 MainMenu
 	 * 1 Farbe
@@ -461,38 +873,148 @@ void snakeFxn(){
     	}
     	switch(menuTyp){
     	case 0:
+        	if(first){
+        		paintMenue();
+        		mainMenuNavigating(menuePoint);
+        		first=0;
+        	}
         	if(input==1){
         		menuePoint++;
         		if(menuePoint>3){
         			menuePoint=0;
         		}
+            	mainMenuNavigating(menuePoint);
         	}else if(input==2){
         		menuePoint--;
         		if(menuePoint<0){
         			menuePoint=3;
         		}
+            	mainMenuNavigating(menuePoint);
+        	}else if(input==3){
+        		menuTyp=menuePoint+1;
+        		if(menuePoint==0 && !isFarbwahl){
+        			break;
+        		}
+        	      OLED_C_MemorySize(0x00,0x5F,0x00,0x5F);
+        	      DDRAM_access();
+        	      for(j=0;j<9216;j++){
+        	    	  OLED_C_Color(0xFF,0xFF);
+        	      }
+        	      first=1;
         	}
-        	mainMenuNavigating(menuePoint);
     		break;
     	case 1:
+    		if(isFarbwahl){
+    			if(input==4){
+					menuTyp=0;
+					OLED_C_MemorySize(0x00,0x5F,0x00,0x5F);
+					DDRAM_access();
+					for(j=0;j<9216;j++){
+						OLED_C_Color(0xFF,0xFF);
+					}
+					first=1;
+				}
+    		}else{
+    			//paintMenue();
+    			int x1=0x04;
+    			int x2=0x0B;
+    			writeLetter(wLine1,wLine2,wLine3,wLine4,wLine5,wLine6,wLine7,wLine8,x1,x2,0x05,0x0C,0x00,0x00);
+    			writeLetter(rLine1,rLine2,rLine3,rLine4,rLine5,rLine6,rLine7,rLine8,(x1+=9),(x2+=9),0x05,0x0C,0x00,0x00);
+    			writeLetter(oLine1,oLine2,oLine3,oLine4,oLine5,oLine6,oLine7,oLine8,(x1+=9),(x2+=9),0x05,0x0C,0x00,0x00);
+    			writeLetter(nLine1,nLine2,nLine3,nLine4,nLine5,nLine6,nLine7,nLine8,(x1+=9),(x2+=9),0x05,0x0C,0x00,0x00);
+    			writeLetter(gLine1,gLine2,gLine3,gLine4,gLine5,gLine6,gLine7,gLine8,(x1+=9),(x2+=9),0x05,0x0C,0x00,0x00);
+    			writeLetter(mLine1,mLine2,mLine3,mLine4,mLine5,mLine6,mLine7,mLine8,(x1+=18),(x2+=18),0x05,0x0C,0x00,0x00);
+    			writeLetter(oLine1,oLine2,oLine3,oLine4,oLine5,oLine6,oLine7,oLine8,(x1+=9),(x2+=9),0x05,0x0C,0x00,0x00);
+    			writeLetter(dLine1,dLine2,dLine3,dLine4,dLine5,dLine6,dLine7,dLine8,(x1+=9),(x2+=9),0x05,0x0C,0x00,0x00);
+    			menuTyp=0;
+    		}
     		break;
     	case 2:
+        	if(first){
+        		writeLetter(hLine1,hLine2,hLine3,hLine4,hLine5,hLine6,hLine7,hLine8,0x07,0x0E,0x51,0x58,0x00,0x00);
+        		writeLetter(eLine1,eLine2,eLine3,eLine4,eLine5,eLine6,eLine7,eLine8,0x10,0x17,0x51,0x58,0x00,0x00);
+        		writeLetter(lLine1,lLine2,lLine3,lLine4,lLine5,lLine6,lLine7,lLine8,0x19,0x20,0x51,0x58,0x00,0x00);
+        		writeLetter(lLine1,lLine2,lLine3,lLine4,lLine5,lLine6,lLine7,lLine8,0x22,0x29,0x51,0x58,0x00,0x00);
+        		writeLetter(iLine1,iLine2,iLine3,iLine4,iLine5,iLine6,iLine7,iLine8,0x2B,0x32,0x51,0x58,0x00,0x00);
+        		writeLetter(gLine1,gLine2,gLine3,gLine4,gLine5,gLine6,gLine7,gLine8,0x34,0x3B,0x51,0x58,0x00,0x00);
+        		writeLetter(kLine1,kLine2,kLine3,kLine4,kLine5,kLine6,kLine7,kLine8,0x3D,0x44,0x51,0x58,0x00,0x00);
+        		writeLetter(eLine1,eLine2,eLine3,eLine4,eLine5,eLine6,eLine7,eLine8,0x46,0x4D,0x51,0x58,0x00,0x00);
+        		writeLetter(iLine1,iLine2,iLine3,iLine4,iLine5,iLine6,iLine7,iLine8,0x4F,0x56,0x51,0x58,0x00,0x00);
+        		writeLetter(tLine1,tLine2,tLine3,tLine4,tLine5,tLine6,tLine7,tLine8,0x58,0x5F,0x51,0x58,0x00,0x00);
+        		helligkeitsNavigating(helligkeitsValue);
+        	}
         	if(input==1){
-        		menuePoint++;
-        		if(menuePoint>3){
-        			menuePoint=0;
+        		helligkeitsValue--;
+        		if(helligkeitsValue<0){
+        			helligkeitsValue=100;
         		}
         	}else if(input==2){
-        		menuePoint--;
-        		if(menuePoint<0){
-        			menuePoint=3;
+        		helligkeitsValue++;
+        		if(helligkeitsValue>100){
+        			helligkeitsValue=0;
         		}
+        	}else if(input==4){
+        		menuTyp=0;
+				OLED_C_MemorySize(0x00,0x5F,0x00,0x5F);
+				DDRAM_access();
+				for(j=0;j<9216;j++){
+					OLED_C_Color(0xFF,0xFF);
+				}
+        		first=1;
         	}
-        	//helligkeitsNavigating(menuePoint);
     		break;
     	case 3:
+    		if(first){
+    			printModus();
+        		modusNavigation(modusMenuePoint);
+    			first=0;
+    		}
+        	if(input==1){
+        		modusMenuePoint++;
+        		if(modusMenuePoint>4){
+        			modusMenuePoint=0;
+        		}
+        		modusNavigation(modusMenuePoint);
+        	}else if(input==2){
+        		modusMenuePoint--;
+        		if(modusMenuePoint<0){
+        			modusMenuePoint=4;
+        		}
+        		modusNavigation(modusMenuePoint);
+        	}else if(input==3){
+    			if(modusMenuePoint==4){
+    				isFarbwahl=1;
+    			}else{
+    				isFarbwahl=0;
+    			}
+    			//sendValue to xmega
+    		}else if(input==4){
+        		menuTyp=0;
+				OLED_C_MemorySize(0x00,0x5F,0x00,0x5F);
+				DDRAM_access();
+				for(j=0;j<9216;j++){
+					OLED_C_Color(0xFF,0xFF);
+				}
+        		first=1;
+        	}
     		break;
     	case 4:
+    		if(first){
+    			printStatistik();
+    			first=0;
+    		}
+    		if(input==3){
+    			//refresh Values
+    			printStatistik();
+    		}else if(input==4){
+        		menuTyp=0;
+				OLED_C_MemorySize(0x00,0x5F,0x00,0x5F);
+				DDRAM_access();
+				for(j=0;j<9216;j++){
+					OLED_C_Color(0xFF,0xFF);
+				}
+        		first=1;
+        	}
     		break;
     	}
 		input=0;
@@ -586,12 +1108,12 @@ unsigned int getADCValue(unsigned short channel) {
 	return tmp2;  // Returns 12-bit ADC value
 }
 
-/*
+
 void clickInterrupt() {
 	int status = CLICK;
 	Mailbox_post(mbox, &status, BIOS_WAIT_FOREVER);
 	GPIOIntClear(GPIO_PORTD_BASE, GPIO_PIN_4);
-}*/
+}
 
 void main(){
       InitBoard();
@@ -632,11 +1154,7 @@ void main(){
 		OLED_C_MemorySize(0x02,0x05,0x44,0x48);
 		DDRAM_access();
 		for(j=0;j<20;j++){
-	    	  if(j<4 || j>15 || (j%4)==3|| (j%4)==0){
 	        	  OLED_C_Color(0x00,0x00);
-	    	  }else{
-	        	  OLED_C_Color(0xFF,0xFF);
-	    	  }
 		}
 		OLED_C_MemorySize(0x02,0x05,0x37,0x3B);
 		DDRAM_access();
@@ -726,7 +1244,7 @@ void main(){
     }
 
     // Interrupt for button press
-    /*Error_Block ebHWI;
+    Error_Block ebHWI;
     Error_init(&ebHWI);
     Hwi_Params HWIParams;
     Hwi_Handle HWIHandle;
@@ -741,7 +1259,7 @@ void main(){
     }
 
     Hwi_enableInterrupt(INT_GPIOA_TM4C129);
-    GPIOIntEnable(GPIO_PORTA_BASE, GPIO_PIN_0);*/
+    GPIOIntEnable(GPIO_PORTA_BASE, GPIO_PIN_0);
 
     // Start BIOS
     BIOS_start();
